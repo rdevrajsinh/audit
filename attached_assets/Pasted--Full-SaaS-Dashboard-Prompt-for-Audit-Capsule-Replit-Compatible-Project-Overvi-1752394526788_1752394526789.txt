@@ -1,0 +1,231 @@
+**Full SaaS Dashboard Prompt for 'Audit Capsule' (Replit-Compatible)**
+
+---
+
+### 🎯 **Project Overview**
+
+You are building a full-stack SaaS application named **Audit Capsule**, designed for **automated IT security audits** targeting **SME (Small and Medium Enterprises)**. The platform will:
+
+* Discover digital assets
+* Perform automated vulnerability scans
+* Audit cloud misconfigurations and IAM
+* Provide compliance readiness scoring
+* Generate executive and technical PDF reports
+
+The application must be **multi-tenant**, scalable, and secure. It should follow **modern DevOps principles**, be responsive for desktop and mobile, and leverage open-source tools for scanning and reporting.
+
+---
+
+### 🧱 **Project Structure and Architecture**
+
+**Frontend:** React.js + Tailwind CSS (or ShadCN)
+
+* Built with modular components and a layout-friendly dashboard.
+* Use React Router for page routing.
+* Axios for API communication.
+
+**Backend:** FastAPI (Python)
+
+* Secure RESTful APIs
+* Async support for scan tasks
+* JWT Authentication and role-based access
+
+**Database:** PostgreSQL
+
+* User, organization, scan jobs, findings, compliance tables
+
+**Deployment:**
+
+* Dockerized services
+* Optionally use Replit's web + backend deployment or move to Fly.io/Render/Vercel later
+
+---
+
+### 👤 **User Roles**
+
+* **Super Admin** (Platform-level management)
+* **Org Admin** (Company owner)
+* **Auditor/User** (Internal SME user)
+
+---
+
+### 🧩 **Feature Breakdown**
+
+#### ✅ 1. **Authentication & Multi-Tenant Setup**
+
+* Sign Up with email + company name
+* JWT login/token refresh
+* Forgot/reset password with email OTP
+* Account linked to tenant/org\_id
+* Role-based permissions (RBAC)
+
+#### ✅ 2. **Dashboard UI (React)**
+
+* Left Sidebar: Dashboard, Assets, Scans, IAM, Compliance, Reports, Settings
+* Main View:
+
+  * Summary cards (Assets, Vulnerabilities, Compliance Score)
+  * Graphs (Line/Bar for risks over time)
+  * Recent scan activities
+
+#### ✅ 3. **Asset Discovery**
+
+* Input: domain/IP/subnet
+* Backend runs:
+
+  * Subfinder (subdomain enumeration)
+  * Nmap (for open ports, services)
+  * Shodan API (optional external exposure)
+* Store and tag assets in DB
+
+#### ✅ 4. **Vulnerability Scanner**
+
+* Select from discovered assets
+* Scan options:
+
+  * Basic (ping/Nmap)
+  * Web (OWASP ZAP)
+  * SQLi (sqlmap)
+* Output:
+
+  * Vulnerability name
+  * Severity (CVSS Score)
+  * Affected endpoint
+  * Suggested fix
+* Save to history per org
+
+#### ✅ 5. **IAM Audit**
+
+* Integration with:
+
+  * Google Workspace API
+  * Microsoft 365 Graph API
+  * AWS IAM via boto3
+* Report:
+
+  * List of users + roles
+  * MFA enabled?
+  * Last login activity
+  * Over-privileged accounts
+
+#### ✅ 6. **Cloud Misconfiguration Scans**
+
+* Target: AWS initially
+* Use Prowler or ScoutSuite for scanning
+* Output:
+
+  * Public S3 buckets
+  * Open Security Groups
+  * Lack of CloudTrail logging
+  * Insecure IAM policies
+* Show severity tags and fix guidance
+
+#### ✅ 7. **Compliance Readiness Module**
+
+* Select from ISO 27001, SOC2, GDPR
+* Map findings to control domains
+* Scoring:
+
+  * e.g., ISO: 68% compliant
+  * Gap analysis
+* Visual report with radar/pie chart
+
+#### ✅ 8. **Reporting & PDF Generator**
+
+* User can export:
+
+  * Executive Summary
+  * Asset List
+  * Scan Findings
+  * IAM Audit
+  * Compliance Score
+* Use **WeasyPrint** (Python) or **Puppeteer** (Node) for PDF creation
+* Store PDF for download anytime
+
+#### ✅ 9. **Notifications & Alerts**
+
+* Critical findings => Email alert (via SMTP/SendGrid)
+* Slack/MS Teams webhook support
+* Weekly summary emails
+
+#### ✅ 10. **Settings Panel**
+
+* Org Settings:
+
+  * Company name, logo, timezone
+  * Add/remove users (role assignment)
+* Scan Preferences:
+
+  * Auto-scan frequency (daily/weekly/monthly)
+  * Notification toggles
+
+---
+
+### 🛡️ **Security Guidelines**
+
+* Store secrets via env vars (.env)
+* Secure all endpoints with auth middleware
+* Input validation (FastAPI pydantic models)
+* Rate limiting + abuse detection
+* All passwords hashed with bcrypt
+* HTTPS enforced (production)
+
+---
+
+### 📊 **Database Schema (Simplified)**
+
+* `users` (id, email, org\_id, role)
+* `organizations` (id, name, created\_at)
+* `assets` (id, org\_id, ip, domain, tags)
+* `scan_jobs` (id, asset\_id, type, status, results)
+* `iam_records` (user\_email, role, mfa\_enabled)
+* `compliance_scores` (org\_id, framework, score, gaps)
+* `reports` (id, org\_id, file\_url, created\_at)
+
+---
+
+### 🧪 Testing
+
+* Unit tests for API routes (pytest + httpx)
+* Frontend tests for components (Jest)
+* Mock scans for dev environment
+
+---
+
+### 🧠 Optional Enhancements
+
+* AI-based auto-prioritization of threats
+* Multi-org support with billing integration (Stripe)
+* Webhook for GitHub actions or SIEM export
+* Integration with Jira/ClickUp for creating tasks from findings
+* ChatGPT-powered control mapping suggestion tool
+
+---
+
+### 📂 Recommended Folder Structure (Replit-Friendly)
+
+```
+/audit-capsule/
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── routers/
+│   │   ├── models/
+│   │   ├── services/
+│   │   └── utils/
+│   └── requirements.txt
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   └── App.jsx
+│   └── package.json
+├── .env
+├── docker-compose.yml
+├── README.md
+```
+
+---
+
+Would you like me to start building out any of the modules or generate a Replit starter template with code samples for you?
