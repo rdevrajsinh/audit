@@ -1,6 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { setupAuth, isAuthenticated } from "./auth";
+
 import {
   insertAssetSchema,
   insertScanJobSchema,
@@ -11,9 +13,9 @@ import {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
-
+setupAuth(app);
   // Auth routes
-  app.get('/api/auth/user' , async (req: any, res) => {
+  app.get('/api/auth/user' ,isAuthenticated,async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
@@ -25,7 +27,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Dashboard metrics
-  app.get('/api/dashboard/metrics' , async (req: any, res) => {
+  app.get('/api/dashboard/metrics' ,isAuthenticated, async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -41,7 +43,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Assets routes
-  app.get('/api/assets' , async (req: any, res) => {
+  app.get('/api/assets' , isAuthenticated,async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -56,7 +58,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/assets' , async (req: any, res) => {
+  app.post('/api/assets' ,isAuthenticated,async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -76,7 +78,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/assets/:id' , async (req: any, res) => {
+  app.put('/api/assets/:id' ,isAuthenticated, async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -98,7 +100,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/assets/:id' , async (req: any, res) => {
+  app.delete('/api/assets/:id' ,isAuthenticated, async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -120,7 +122,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Scan jobs routes
-  app.get('/api/scans' , async (req: any, res) => {
+  app.get('/api/scans' ,isAuthenticated, async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -135,7 +137,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/scans' , async (req: any, res) => {
+  app.post('/api/scans' , isAuthenticated,async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -162,7 +164,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Vulnerabilities routes
-  app.get('/api/vulnerabilities' , async (req: any, res) => {
+  app.get('/api/vulnerabilities' ,isAuthenticated,async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -177,7 +179,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/vulnerabilities/:id' , async (req: any, res) => {
+  app.put('/api/vulnerabilities/:id' ,isAuthenticated, async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -200,7 +202,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // IAM records routes
-  app.get('/api/iam-records' , async (req: any, res) => {
+  app.get('/api/iam-records' , isAuthenticated,async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -216,7 +218,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Compliance routes
-  app.get('/api/compliance' , async (req: any, res) => {
+  app.get('/api/compliance' ,isAuthenticated, async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -231,7 +233,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/compliance' , async (req: any, res) => {
+  app.post('/api/compliance' ,isAuthenticated, async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -252,7 +254,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Reports routes
-  app.get('/api/reports' , async (req: any, res) => {
+  app.get('/api/reports' ,isAuthenticated, async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
@@ -267,7 +269,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/reports' , async (req: any, res) => {
+  app.post('/api/reports' ,isAuthenticated, async (req: any, res) => {
     try {
       const user = await storage.getUser(req.user.claims.sub);
       if (!user?.organizationId) {
