@@ -9,6 +9,8 @@ import TopBar from "@/components/Layout/TopBar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 // Badge component not available, using inline styles
+import { Badge } from "@/components/ui/badge";
+
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
